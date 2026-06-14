@@ -1,0 +1,147 @@
+{
+  "meta": {
+    "format": "httpie",
+    "version": "1.0.0",
+    "contentType": "collection",
+    "schema": "https://schema.httpie.io/1.0.0.json",
+    "docs": "https://httpie.io/r/help/export-from-httpie",
+    "source": "HTTPie Desktop 2025.2.0"
+  },
+  "entry": {
+    "name": "Eduvos",
+    "icon": {
+      "name": "default",
+      "color": "gray"
+    },
+    "auth": {
+      "type": "none"
+    },
+    "requests": [
+      {
+        "name": "",
+        "url": "https://eduvos-campus.webuntis.com/WebUntis/api/rest/view/v1/timetable/grid?timetableType=MY_TIMETABLE",
+        "method": "GET",
+        "headers": [
+          {
+            "name": "Cookie",
+            "value": "schoolname=\"_ZWR1dm9zLWNhbXB1cw==\"; Tenant-Id=\"9138900\"; JSESSIONID=22B93721FA467A4314FA187D7BCA3EA7; traceId=ce50709b2a821c92d47c1d73e977ae3b958ef98f; _sleek_session=%7B%22init%22%3A%222026-03-31T08%3A17%3A40.504Z%22%7D; _sleek_product=%7B%22token%22%3A%22390399759153519410b8cefa9fdb8588903065a76%22%2C%22user_data%22%3A%7B%22user_id%22%3A11500026%2C%22admin_id%22%3A0%2C%22sso%22%3Atrue%2C%22anonymous%22%3Afalse%2C%22data_name%22%3A%22378631%22%2C%22data_full_name%22%3A%22%22%2C%22data_mail%22%3A%22378631%409138900.webuntis.com%22%2C%22data_img%22%3A%22https%3A%2F%2Fstorage.sleekplan.com%2Fstatic%2Fimage%2Fuser.png%22%2C%22segments%22%3A%5B%5D%2C%22notify%22%3A1%2C%22notify_settings%22%3A%7B%22mention%22%3Atrue%2C%22changelog%22%3Afalse%2C%22subscribed%22%3Atrue%7D%7D%7D",
+            "enabled": true
+          },
+          {
+            "name": "Authorization",
+            "value": "Bearer eyJraWQiOiI3MzIxNjk2MzYiLCJhbGciOiJSUzI1NiJ9.eyJ0ZW5hbnRfaWQiOiI5MTM4OTAwIiwic3ViIjoiRURVVjQ3NzcyMTlAdm9zc2llLm5ldCIsInJvbGVzIjoiU1RVREVOVCIsImlzcyI6IndlYnVudGlzIiwibG9jYWxlIjoiZW4iLCJzYyI6IiIsInVzZXJfdHlwZSI6IlVTRVIiLCJyb3V0ZSI6Imtvcy5pbnRlcm5hbC53ZWJ1bnRpcy5jb20iLCJ1c2VyX2lkIjozNzg2MzEsImhvc3QiOiJlZHV2b3MtY2FtcHVzLndlYnVudGlzLmNvbSIsInNuIjoiZWR1dm9zLWNhbXB1cyIsInNjb3BlcyI6IiIsImV4cCI6MTc4MDMzMDYyNCwicGVyIjpbXSwiaWF0IjoxNzgwMzI5NzI0LCJ1c2VybmFtZSI6IkVEVVY0Nzc3MjE5QHZvc3NpZS5uZXQiLCJzciI6IiIsInBlcnNvbl9pZCI6MzI5MDgzfQ.Xk_fHsBb8uLHxBd1Sf-4MXClaavFUrUDDk31zBGUFC_sowg2EaVKkooneWzD6j8sHjC-mJ-RYkVf6jILelukSzGStw8M-jH21PMSC_7NarqPI4v_5rpFSnrpS_qCF3CRyG1AUE3P92UZRibYwRfkikT9TFo4Y0QP9wu5gEsZhAetILLaThcd81NMgbauVvP2KLJ1kUPq9HN9M3EYQzvSNcwl3bIrz_H-ppC_XJS7LA6KP8D07IVuhHXgSY9ExtPzdjrJ8iSW8ViAzxY23PB5ow6zZzfa_EQZuQBj2q0Kt-XXUVKrAruLvGmaDiS9HUyXHKNp9SwTlOLTNPcTZnzBZQ",
+            "enabled": true
+          }
+        ],
+        "queryParams": [],
+        "pathParams": [],
+        "auth": {
+          "type": "inherited"
+        },
+        "body": {
+          "type": "none",
+          "file": {
+            "name": ""
+          },
+          "text": {
+            "value": "",
+            "format": "application/json"
+          },
+          "form": {
+            "isMultipart": false,
+            "fields": []
+          },
+          "graphql": {
+            "query": "",
+            "variables": ""
+          }
+        }
+      },
+      {
+        "name": "",
+        "url": "https://eduvos-campus.webuntis.com/WebUntis/api/token/new",
+        "method": "GET",
+        "headers": [
+          {
+            "name": "Cookie",
+            "value": "JSESSIONID=023A61AF9F864DFAA",
+            "enabled": true
+          },
+          {
+            "name": "Accept",
+            "value": "application/json, text/plain, */*",
+            "enabled": false
+          },
+          {
+            "name": "TE",
+            "value": "trailers",
+            "enabled": false
+          },
+          {
+            "name": "Referer",
+            "value": "https://eduvos-campus.webuntis.com/timetable/my-student",
+            "enabled": false
+          }
+        ],
+        "queryParams": [],
+        "pathParams": [],
+        "auth": {
+          "type": "inherited"
+        },
+        "body": {
+          "type": "none",
+          "file": {
+            "name": ""
+          },
+          "text": {
+            "value": "",
+            "format": "application/json"
+          },
+          "form": {
+            "isMultipart": false,
+            "fields": []
+          },
+          "graphql": {
+            "query": "",
+            "variables": ""
+          }
+        }
+      },
+      {
+        "name": "",
+        "url": "https://eduvos-campus.webuntis.com/WebUntis/api/rest/view/v1/timetable/entries?start=2026-06-01&end=2026-06-05&format=3&resourceType=STUDENT&resources=329083&periodTypes=&timetableType=MY_TIMETABLE&layout=START_TIME",
+        "method": "GET",
+        "headers": [
+          {
+            "name": "Authorization",
+            "value": "Bearer .eyJ0ZW5hbnRfaWQiOiI5MTM4OTAwIiwic3ViIjoiRURVVjQ3NzcyMTlAdm9zc2llLm5ldCIsInJvbGVzIjoiU1RVREVOVCIsImlzcyI6IndlYnVudGlzIiwibG9jYWxlIjoiZW4iLCJzYyI6IiIsInVzZXJfdHlwZSI6IlVTRVIiLCJyb3V0ZSI6Imtvcy5pbnRlcm5hbC53ZWJ1bnRpcy5jb20iLCJ1c2VyX2lkIjozNzg2MzEsImhvc3QiOiJlZHV2b3MtY2FtcHVzLndlYnVudGlzLmNvbSIsInNuIjoiZWR1dm9zLWNhbXB1cyIsInNjb3BlcyI6IiIsImV4cCI6MTc4MDg0NjE2NiwicGVyIjpbXSwiaWF0IjoxNzgwODQ1MjY2LCJ1c2VybmFtZSI6IkVEVVY0Nzc3MjE5QHZvc3NpZS5uZXQiLCJzciI6IiIsInBlcnNvbl9pZCI6MzI5MDgzfQ.hp07JMt9D1YGb0ZS887iLqt-v3ZGQrQxbdjFBaVzBExS2HLpCbgi_75kEAmKQEVR7Lf3I3UzJROziCTy3tbOZRIMh5WC5l3NF1uHmgkCvIXhZnxXJu4BiVVKc3LD9dvu_mQqV4hX_m-Yr-tsu4dmCvkxmmWpwIdzz1_qsf5Yih475un6x9Xhj567NYAaUNUHzeGdKR6SPuWClvMYNSZ-9jD1kfviR8mzRdYtaeWVcYbla7QUz4ZCjZzIH_1OaV1FqXDh7mSiCzvIaUJuwbFmPd3-e0lHo8dsu6qXwOgWSuADPdw3RsSe407k8XaA7EDi0QmfuOJijIp13jN4kQh_8w",
+            "enabled": true
+          }
+        ],
+        "queryParams": [],
+        "pathParams": [],
+        "auth": {
+          "type": "inherited"
+        },
+        "body": {
+          "type": "none",
+          "file": {
+            "name": ""
+          },
+          "text": {
+            "value": "",
+            "format": "application/json"
+          },
+          "form": {
+            "isMultipart": false,
+            "fields": []
+          },
+          "graphql": {
+            "query": "",
+            "variables": ""
+          }
+        }
+      }
+    ]
+  }
+}
