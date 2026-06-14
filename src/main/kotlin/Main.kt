@@ -1,6 +1,5 @@
 package org.neosahadeo
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import com.warrenstrange.googleauth.GoogleAuthenticator
 import okhttp3.MediaType.Companion.toMediaType
@@ -8,43 +7,81 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.lang.Exception
-import java.util.Calendar
+import org.apache.commons.codec.binary.Base32
 
-@Serializable
-data class Auth(val clientTime: Long, val user: String, val otp: Int)
+class KUntis(){
+    @Serializable
+    private data class Auth(val clientTime: Long, val user: String, val otp: String)
 
-@Serializable
-data class Params(val auth: Auth)
+    @Serializable
+    private data class Params(val auth: Auth)
 
-@Serializable
-data class Payload(val id: Int = 0, val jsonrpc: String = "2.0", val method: String, val params: List<Params>)
+    @Serializable
+    private data class Payload(val id: Int = 0, val jsonrpc: String = "2.0", val method: String, val params: List<Params>)
 
-fun main() {
-    val auth = GoogleAuthenticator()
-    val code: Int = auth.getTotpPassword("")
+    companion object {
+        fun login(secretBase: String, email: String): String? {
+            val time = System.currentTimeMillis()
+            val base32 = Base32()
+            val secret = base32.decode(secretBase)
 
-    val time = Calendar.getInstance().timeInMillis
-    val client = OkHttpClient()
-    val payload = Payload(
-        method = "getUserData2017",
-        params = listOf(Params(auth = Auth(clientTime = time, user = "EDUV4777219@vossie.net", otp = code)))
-    )
+            val authenticator = GoogleAuthenticator()
+            val otpInt = authenticator.getTotpPassword(secret.toString())
+            val otp = String.format("%06d", otpInt)
 
-    val json = Json.encodeToString(payload)
-    val mediaType = "application/json".toMediaType()
-    val body = json.toRequestBody(mediaType)
+            val client = OkHttpClient()
+            val payload = Payload(
+                method = "getUserData2017",
+                params = listOf(Params(auth = Auth(clientTime = time, user = email, otp = otp)))
+            )
 
-    val req = Request.Builder()
-        .url("https://eduvos-campus.webuntis.com/WebUntis/jsonrpc.do")
-        .post(body)
-        .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.3")
-        .addHeader("Content-Type", "application/json")
-        .build()
+            val json = Json.encodeToString(payload)
+            val mediaType = "application/json".toMediaType()
+            val body = json.toRequestBody()
 
-    client.newCall(req).execute().use {
-        res -> if (!res.isSuccessful) throw Exception("HTTP Error ${res.code}")
-        for ((name, value) in res.headers) {
-            println("$name: $value")
+            val req = Request.Builder()
+                .url("https://eduvos-campus.webuntis.com/WebUntis/jsonrpc_intern.do")
+                .post(body)
+                .addHeader("Content-Type", "application/json")
+                .build()
+
+            var jsession = client.newCall(req).execute().use { res ->
+                if (!res.isSuccessful) throw Exception("HTTP Error ${res.code}")
+                var found: String? = null
+                for ((name, value) in res.headers) {
+                    if (name == "set-cookie") {
+                        for (x in value.split(";")) {
+                            if (x.trim().startsWith("JSESSIONID")){
+                                found = x
+                            }
+                        }
+                    }
+                    if (found != null) break
+                }
+                found
+            }
+            if (jsession == null)
+                throw kotlin.Exception("JSession ID not found.")
+
+            val accessReq = Request.Builder()
+                .url("https://eduvos-campus.webuntis.com/WebUntis/api/token/new")
+                .get()
+                .addHeader("Accept", "application/json")
+                .addHeader("Cookie", jsession)
+                .build()
+
+            println("----DATA----")
+            client.newCall(accessReq).execute().use { res ->
+                if (!res.isSuccessful) throw Exception("HTTP Error ${res.code}")
+                println(res.body.string())
+            }
+
+
+            return null
         }
     }
+}
+
+fun main() {
+    KUntis.login("", "")
 }
