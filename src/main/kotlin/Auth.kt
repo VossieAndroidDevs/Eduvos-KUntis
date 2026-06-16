@@ -5,13 +5,19 @@ import javax.crypto.spec.SecretKeySpec
 import kotlin.math.floor
 import kotlin.math.pow
 
-fun toHex(bytes: ByteArray) =
-    bytes.joinToString("") { "%02x".format(it.toInt() and 0xFF) }
-
+/**
+ * Hmac OTP Class.
+ * */
 class HTOP(){
     companion object {
+        /**
+         * Generate an OTP.
+         * @param {ByteArray} secret.
+         * @param {Long} timestamp; time should be in milliseconds.
+         * @return {String} otp; padded to 6 digits.
+         * */
         fun generate(secret: ByteArray, timestamp: Long): String {
-            val message = uintDecode(counterCalc(30, timestamp))
+            val message = intDecode(counterCalc(30, timestamp))
             val mac = Mac.getInstance("HmacSHA1")
             val spec = SecretKeySpec(secret, "HmacSHA1")
             mac.init(spec)
@@ -30,7 +36,6 @@ class HTOP(){
 }
 
 /**
- * __BETA FUNCTION__
  * Converts an integer to an ByteArray.
  * @param {Int} num Int.
  * @returns ByteArray.
@@ -46,7 +51,12 @@ fun intDecode(num: Int): ByteArray {
     return store
 }
 
-fun uintDecode(num: Long): ByteArray {
+/**
+ * Converts a number to a byte array.
+ * @param {Long} num.
+ * @return {ByteArray} ByteArray.
+ * */
+fun intDecode(num: Long): ByteArray {
     val arr = ByteArray(8)
     var acc = num
     for (i in 7 downTo 0) {
@@ -61,6 +71,11 @@ fun uintDecode(num: Long): ByteArray {
 
 
 private const val BASE32_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
+/**
+ * Convert base 32 to a byte array.
+ * @param {String} input; should be base32;
+ * @return {ByteArray} ByteArray.
+ * */
 fun base32Decode(input: String): ByteArray {
     val cleaned = input.replace("=", "").uppercase()
     val out = ByteArray((cleaned.length * 5) / 8)
@@ -80,6 +95,16 @@ fun base32Decode(input: String): ByteArray {
     return if (index == out.size) out else out.copyOf(index)
 }
 
+/**
+ * Returns an interval based on the period and timestamp.
+ * This is used to provide a period of time that an OTP is valid for.
+ * @param {Int} period.
+ * @param {Long} timestamp; should be in milliseconds.
+ * @return {Long} floored time.
+ * */
 fun counterCalc(period: Int, timestamp: Long): Long {
     return floor(timestamp.toDouble() / 1000/ period).toLong();
 }
+
+//fun toHex(bytes: ByteArray) =
+//    bytes.joinToString("") { "%02x".format(it.toInt() and 0xFF) }

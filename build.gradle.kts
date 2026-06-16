@@ -1,10 +1,11 @@
 plugins {
     kotlin("jvm") version "2.2.10"
     kotlin("plugin.serialization") version "2.2.10"
+    id("com.gradleup.shadow") version "8.3.0"
 }
 
 group = "org.neosahadeo"
-version = "1.0-SNAPSHOT"
+version = "1.0.0"
 
 repositories {
     mavenCentral()
@@ -19,9 +20,18 @@ dependencies {
 //    testImplementation(kotlin("test")
 }
 
-tasks.test {
-    useJUnitPlatform()
-}
+//tasks.test {
+//    useJUnitPlatform()
+//}
+
 kotlin {
     jvmToolchain(21)
+}
+
+tasks {
+    named<Jar>("jar") {
+        manifest {
+            attributes["Main-Class"] = "org.neosahadeo.MainKt"
+        }
+    }
 }
