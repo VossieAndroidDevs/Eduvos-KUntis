@@ -81,5 +81,5 @@ fun base32Decode(input: String): ByteArray {
 }
 
 fun counterCalc(period: Int, timestamp: Long): Long {
-    return floor(timestamp.toDouble() / 1000 / period).toLong();
+    return floor(timestamp.toDouble() / 1000/ period).toLong();
 }
