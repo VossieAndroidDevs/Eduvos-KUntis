@@ -12,6 +12,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.POST
+import kotlin.system.exitProcess
 
 
 class KUntis(){
@@ -95,5 +96,11 @@ class KUntis(){
 }
 
 suspend fun main() {
-    KUntis.login("", "")
+    print("Enter Secret: ")
+    val secret = readln()
+    print("Enter Email: ")
+    val email = readln()
+    println("Contacting Eduvos Servers, this may take some time...")
+    println(KUntis.login(secret, email))
+    exitProcess(0)
 }
