@@ -1,13 +1,23 @@
 package org.neosahadeo
+import kotlinx.serialization.BinaryFormat
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import com.warrenstrange.googleauth.GoogleAuthenticator
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import java.lang.Exception
-import org.apache.commons.codec.binary.Base32
+import okhttp3.ResponseBody
+import okio.ByteString
+import retrofit2.Call
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.Headers
+import retrofit2.http.POST
+
 
 class KUntis(){
     @Serializable
@@ -19,69 +29,72 @@ class KUntis(){
     @Serializable
     private data class Payload(val id: Int = 0, val jsonrpc: String = "2.0", val method: String, val params: List<Params>)
 
+    private interface ApiService {
+        @Headers("Content-Type: application/json", "Accept: application/json")
+        @POST("WebUntis/jsonrpc_intern.do")
+        suspend fun postPayload(@Body payload: Payload): Response<ResponseBody>
+
+        @Headers("Content-Type: application/json", "Accept: application/json")
+        @GET("WebUntis/api/token/new")
+        suspend fun reqAccess(@Header("Cookie") cookie: String): Response<ResponseBody>
+    }
+
     companion object {
-        fun login(secretBase: String, email: String): String? {
+        suspend fun login(secret: String, email: String): String? {
             val time = System.currentTimeMillis()
-            val base32 = Base32()
-            val secret = base32.decode(secretBase)
+            val otp = HTOP.generate(base32Decode(secret),time )
+            println("Key: $otp")
 
-            val authenticator = GoogleAuthenticator()
-            val otpInt = authenticator.getTotpPassword(secret.toString())
-            val otp = String.format("%06d", otpInt)
+            val jsonCfg = Json { encodeDefaults = true; prettyPrint = false; explicitNulls = false }
+            val contentType = "application/json; charset=utf-8".toMediaType()
+            val rf = Retrofit.Builder()
+                .baseUrl("https://eduvos-campus.webuntis.com/")
+                .client(OkHttpClient.Builder().build())
+                .addConverterFactory(jsonCfg.asConverterFactory(contentType))
+                .build()
 
-            val client = OkHttpClient()
+            val service = rf.create(ApiService::class.java)
+
+//            val client = OkHttpClient()
             val payload = Payload(
                 method = "getUserData2017",
                 params = listOf(Params(auth = Auth(clientTime = time, user = email, otp = otp)))
             )
-
-            val json = Json.encodeToString(payload)
-            val mediaType = "application/json".toMediaType()
-            val body = json.toRequestBody()
-
-            val req = Request.Builder()
-                .url("https://eduvos-campus.webuntis.com/WebUntis/jsonrpc_intern.do")
-                .post(body)
-                .addHeader("Content-Type", "application/json")
-                .build()
-
-            var jsession = client.newCall(req).execute().use { res ->
-                if (!res.isSuccessful) throw Exception("HTTP Error ${res.code}")
-                var found: String? = null
-                for ((name, value) in res.headers) {
+            val call = service.postPayload(payload)
+            if (call.isSuccessful) {
+                var jsession: String? = null
+                for ((name, value) in call.headers()) {
                     if (name == "set-cookie") {
                         for (x in value.split(";")) {
                             if (x.trim().startsWith("JSESSIONID")){
-                                found = x
+                                jsession = x
                             }
                         }
                     }
-                    if (found != null) break
+                    if (jsession != null) break
                 }
-                found
-            }
-            if (jsession == null)
+            if (jsession == null){
                 throw kotlin.Exception("JSession ID not found.")
-
-            val accessReq = Request.Builder()
-                .url("https://eduvos-campus.webuntis.com/WebUntis/api/token/new")
-                .get()
-                .addHeader("Accept", "application/json")
-                .addHeader("Cookie", jsession)
-                .build()
-
-            println("----DATA----")
-            client.newCall(accessReq).execute().use { res ->
-                if (!res.isSuccessful) throw Exception("HTTP Error ${res.code}")
-                println(res.body.string())
             }
 
+                val accessCall = service.reqAccess(jsession)
+                if (accessCall.isSuccessful){
+                    println("----DATA----")
+                    val bodyData = accessCall.body()
+                    println(bodyData?.string())
+                } else {
+                    println("Error: ${call.code()} ${call.errorBody()?.string()}")
+                }
+
+            } else {
+                println("Error: ${call.code()} ${call.errorBody()?.string()}")
+            }
 
             return null
         }
     }
 }
 
-fun main() {
+suspend fun main() {
     KUntis.login("", "")
 }
